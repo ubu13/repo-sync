@@ -1,6 +1,6 @@
 # How the Idea Works
 
-## AVO ULTRA-SYNC SYSTEM (VER 5.0)
+## AVO ULTRA-SYNC SYSTEM (VER 1.0)
 
 ### Konsep Dasar
 
