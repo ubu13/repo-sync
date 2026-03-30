@@ -1,6 +1,6 @@
 # How the Idea Works
 
-## AVO ULTRA-SYNC SYSTEM (VER 1.0)
+## REPO SYNC SYSTEM (VER 1.0)
 
 ### Konsep Dasar
 
@@ -92,11 +92,11 @@ git push origin main
 ## Hasil Akhir
 
 Setelah script berjalan:
-- ✅ `README.md` → `avo.git` (public)
-- ✅ `core/` → `avo_production.git` (private)
+- ✅ `README.md` → `my-awesome-app.git` (public)
+- ✅ `core/` → `my-awesome-app-private.git` (private)
 - ✅ Semua sistem tersinkronisasi!
 
 ---
 
-**Version:** 5.0  
-**Author:** A-LABS
+**Version:** 1.0
+**Author:** UNIXLAB

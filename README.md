@@ -2,6 +2,14 @@
 
 A bash automation script for synchronizing code between public and private Git repositories using submodules.
 
+## TL;DR
+
+Ever had a private project you wanted to show off to the public but didn't want to open source the full code? This is the solution! 🎉
+
+This system lets you **showcase** your private project by only displaying `README.md` in the public repo, while the production code stays safe in the private repo. So you can say "hey, I actually built this" without sharing all your secret sauce 😏
+
+But don't worry, some projects do need to stay private - you know, trade secrets and all that 🤫
+
 ## Overview
 
 This system enables a dual-repository workflow where:
@@ -201,5 +209,5 @@ MIT License - Feel free to use and modify for your own projects.
 
 ---
 
-**Version:** 5.0  
-**Author:** A-LABS
+**Version:** 1.0
+**Author:** UNIXLAB
