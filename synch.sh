@@ -10,8 +10,12 @@ PUBLIC_REPO_URL="git@github.com:your-username/my-awesome-app.git"
 
 CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD | head -n 1)
 
+# Extract repo names from URLs
+PUBLIC_REPO_NAME=$(basename -s .git "$PUBLIC_REPO_URL")
+PRIVATE_REPO_NAME=$(basename -s .git "$PRIVATE_REPO_URL")
+
 echo "------------------------------------------"
-echo "🚀 AVO ULTRA-SYNC SYSTEM (VER 5.0)"
+echo "🚀 REPO SYNC SYSTEM (VER 1.0)"
 echo "   Working Directly in core/"
 echo "------------------------------------------"
 
@@ -23,7 +27,7 @@ if [ -f "core/README.md" ]; then
     git add README.md
     git commit -m "feat: sync README from core $(date +'%Y-%m-%d %H:%M')"
     git push origin "$CURRENT_BRANCH"
-    echo "✅ README synced to my-awesome-app.git (public)"
+    echo "✅ README synced to $PUBLIC_REPO_NAME (public)"
 else
     echo "⚠️  No README.md in core, skipping."
 fi
@@ -35,7 +39,7 @@ cd "$PRIVATE_CORE"
 git add .
 git commit -m "feat: production update $(date +'%Y-%m-%d %H:%M')"
 git push origin "$CURRENT_BRANCH"
-echo "✅ Changes pushed to my-awesome-app-private.git (private)"
+echo "✅ Changes pushed to $PRIVATE_REPO_NAME (private)"
 
 # STEP 2: Update Submodule Reference
 echo "🎭 [STEP 2] Syncing submodule from Core..."
@@ -48,6 +52,6 @@ echo "✅ Project updated on branch $CURRENT_BRANCH."
 
 echo "------------------------------------------"
 echo "🎉 ALL SYSTEMS SYNCED!"
-echo "   • README → my-awesome-app.git (public)"
-echo "   • Core → my-awesome-app-private.git (private)"
+echo "   • README → $PUBLIC_REPO_NAME (public)"
+echo "   • Core → $PRIVATE_REPO_NAME (private)"
 echo "------------------------------------------"

@@ -39,12 +39,22 @@ project-folder/
 
 ### Usage
 
-1. Edit files directly in the `core/` folder
-2. Run the sync script:
+> **📍 This is your workspace:** The `core/` folder (or whatever you named it) is where you'll work from now on! All your production code, edits, and development happen inside this folder.
+
+1. Edit files directly in the `core/` (or your private folder)
+2. Go back to the **public repo root folder** (parent of core/)
+3. Run the sync script from there:
    ```bash
-   ./synch.sh
+   # ❌ DON'T run from inside core/private folder!
+   cd core && ./synch.sh    # WRONG!
+   
+   # ✅ DO run from public repo root
+   cd ..
+   ./synch.sh               # CORRECT!
    ```
-3. Done! Your changes are now synced to both repositories
+4. Done! Your changes are now synced to both repositories
+
+> **⚠️ Important:** Always run `synch.sh` from the **public repository root folder**, NOT from inside the private/core folder. The script needs to access both the public repo `.git` and the private submodule.
 
 ## Setup for New Projects
 
@@ -57,61 +67,104 @@ Before starting, ensure you have:
 
 ### Step-by-Step Setup
 
-### 1. Create a new project folder
+> **💡 Important Note About Folder Names:**
+> 
+> The folder name `core` used in examples below is **completely customizable**! You can name it anything that fits your project:
+> - `core` - generic name
+> - `src` - if it's your source code
+> - `private` - to emphasize it's private
+> - `production` - for production code
+> - `backend`, `frontend`, `app` - whatever makes sense!
+> 
+> **The key is consistency:** Use the same folder name in:
+> 1. `git submodule add <repo-url> <folder-name>`
+> 2. `PRIVATE_CORE` variable in `synch.sh`
+> 
+> Example:
+> ```bash
+> # If you use 'src' instead of 'core':
+> git submodule add git@github.com:your-username/private-repo.git src
+> 
+> # Then in synch.sh:
+> PRIVATE_CORE="$MASKING_DIR/src"
+> ```
+
+There are **2 scenarios** - choose yours:
+
+---
+
+#### Scenario A: You Already Have a Private Repo (Want to Showcase It)
+
+If you already have a private repository with code and just want to showcase it publicly:
+
+### 1. Create project folder & init public repo
 ```bash
 mkdir ~/projects/my-awesome-app
 cd ~/projects/my-awesome-app
-```
-
-### 2. Initialize the PUBLIC Git repository
-```bash
 git init
 git remote add origin git@github.com:your-username/my-awesome-app.git
 ```
 
-### 3. Create and initialize the core folder (PRIVATE repo)
+### 2. Add your existing private repo as submodule
 
-This step creates the private repository from scratch:
+Just add it directly! Name the folder whatever you want:
 
 ```bash
-# Create the core folder
-mkdir core
+git submodule add git@github.com:your-username/existing-private-repo.git core
+git submodule update --init --recursive
+```
+
+### 3. Create README in the private repo (for showcase)
+
+```bash
 cd core
-
-# Initialize it as a separate git repository
-git init
-
-# Add your private production repo as remote
-git remote add origin git@github.com:your-username/my-awesome-app-private.git
-
-# Create initial commit
-echo "# My Awesome App - Production" > README.md
+echo "# My Awesome Project - Check this out!" > README.md
 git add .
-git commit -m "Initial commit"
-
-# Push to private repo (this creates the repo on GitHub)
-git branch -M main
-git push -u origin main
-
-# Go back to parent folder
+git commit -m "Add README for public showcase"
+git push
 cd ..
 ```
 
-> **Note:** If the private repository already exists on GitHub, you can skip Step 3 and go directly to Step 4.
+**Done!** Continue to Step 5 (Copy sync script).
 
-### 4. Convert core folder to submodule
+---
 
-Now convert the `core/` folder into a proper Git submodule:
+#### Scenario B: Creating Everything from Scratch
+
+If you're starting fresh with no existing repo:
+
+### 1. Create project folder & init public repo
+```bash
+mkdir ~/projects/my-awesome-app
+cd ~/projects/my-awesome-app
+git init
+git remote add origin git@github.com:your-username/my-awesome-app.git
+```
+
+### 2. Create empty private repo on GitHub
+
+Go to GitHub → New Repository → Make it **Private** → Don't initialize with README/.gitignore
+
+### 3. Add the empty private repo as submodule
 
 ```bash
-# Remove the existing core folder (we'll re-add it as submodule)
-rm -rf core
-
-# Add the private repo as a submodule
 git submodule add git@github.com:your-username/my-awesome-app-private.git core
-
-# Initialize and update submodule
 git submodule update --init --recursive
+```
+
+### 4. Initialize content inside submodule
+
+```bash
+cd core
+
+# Create your production code here
+echo "# My Awesome App - Production" > README.md
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git push -u origin main
+
+cd ..
 ```
 
 ### 5. Copy the sync script

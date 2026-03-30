@@ -39,12 +39,22 @@ project-folder/
 
 ### Cara Pakai
 
-1. Edit file langsung di folder `core/`
-2. Jalankan script sync:
+> **📍 Ini adalah workspace kamu:** Folder `core/` (atau nama apapun yang kamu pakai) adalah tempat kamu akan bekerja mulai sekarang! Semua kode production, edit, dan development dilakukan di dalam folder ini.
+
+1. Edit file langsung di folder `core/` (atau folder private kamu)
+2. Kembali ke **folder root public repo** (parent dari core/)
+3. Jalankan script sync dari sana:
    ```bash
-   ./synch.sh
+   # ❌ JANGAN jalanin dari dalam folder core/private!
+   cd core && ./synch.sh    # SALAH!
+   
+   # ✅ Jalanin dari root public repo
+   cd ..
+   ./synch.sh               # BENAR!
    ```
-3. Selesai! Perubahan kamu sudah di-sync ke kedua repository
+4. Selesai! Perubahan kamu sudah di-sync ke kedua repository
+
+> **⚠️ Penting:** Selalu jalankan `synch.sh` dari **folder root repository public**, BUKAN dari dalam folder private/core. Script ini butuh akses ke `.git` repo public dan submodule private.
 
 ## Setup Project Baru
 
@@ -57,61 +67,104 @@ Sebelum memulai, pastikan kamu sudah punya:
 
 ### Langkah-langkah Setup
 
-### 1. Buat folder project baru
+> **💡 Catatan Penting Tentang Nama Folder:**
+> 
+> Nama folder `core` yang digunakan di contoh bawah ini **bisa diubah sesuka hati**! Kamu bisa pakai nama yang cocok buat project kamu:
+> - `core` - nama generic
+> - `src` - kalau ini source code kamu
+> - `private` - untuk nandasin kalau ini private
+> - `production` - untuk production code
+> - `backend`, `frontend`, `app` - apapun yang masuk akal!
+> 
+> **Yang penting konsisten:** Gunakan nama folder yang sama di:
+> 1. `git submodule add <repo-url> <nama-folder>`
+> 2. Variabel `PRIVATE_CORE` di `synch.sh`
+> 
+> Contoh:
+> ```bash
+> # Kalau kamu pakai 'src' bukan 'core':
+> git submodule add git@github.com:your-username/private-repo.git src
+> 
+> # Terus di synch.sh:
+> PRIVATE_CORE="$MASKING_DIR/src"
+> ```
+
+Ada **2 skenario** - pilih sesuai kondisi kamu:
+
+---
+
+#### Skenario A: Sudah Punya Repo Private (Mau di-Showcase)
+
+Kalau kamu sudah punya repository private dengan kode dan mau pamerin ke public:
+
+### 1. Buat folder project & init public repo
 ```bash
 mkdir ~/projects/my-awesome-app
 cd ~/projects/my-awesome-app
-```
-
-### 2. Initialize repository Git PUBLIC
-```bash
 git init
 git remote add origin git@github.com:your-username/my-awesome-app.git
 ```
 
-### 3. Buat dan initialize folder core (repo PRIVATE)
+### 2. Add repo private yang sudah ada sebagai submodule
 
-Langkah ini membuat repository private dari awal:
+Langsung aja! Nama folder terserah kamu:
 
 ```bash
-# Buat folder core
-mkdir core
+git submodule add git@github.com:your-username/existing-private-repo.git core
+git submodule update --init --recursive
+```
+
+### 3. Buat README di repo private (untuk showcase)
+
+```bash
 cd core
-
-# Initialize sebagai git repository terpisah
-git init
-
-# Tambahkan remote repo private production
-git remote add origin git@github.com:your-username/my-awesome-app-private.git
-
-# Buat commit awal
-echo "# My Awesome App - Production" > README.md
+echo "# My Awesome Project - Check this out!" > README.md
 git add .
-git commit -m "Initial commit"
-
-# Push ke repo private (ini akan membuat repo di GitHub)
-git branch -M main
-git push -u origin main
-
-# Kembali ke folder parent
+git commit -m "Add README for public showcase"
+git push
 cd ..
 ```
 
-> **Catatan:** Jika repository private sudah ada di GitHub, kamu bisa skip Step 3 dan langsung ke Step 4.
+**Selesai!** Lanjut ke Step 5 (Copy sync script).
 
-### 4. Ubah folder core menjadi submodule
+---
 
-Sekarang ubah folder `core/` menjadi Git submodule yang proper:
+#### Skenario B: Buat Semua dari Awal
+
+Kalau kamu mulai dari nol, belum punya repo sama sekali:
+
+### 1. Buat folder project & init public repo
+```bash
+mkdir ~/projects/my-awesome-app
+cd ~/projects/my-awesome-app
+git init
+git remote add origin git@github.com:your-username/my-awesome-app.git
+```
+
+### 2. Buat repo private kosong di GitHub
+
+Buka GitHub → New Repository → Pilih **Private** → Jangan initialize dengan README/.gitignore
+
+### 3. Add repo private kosong sebagai submodule
 
 ```bash
-# Hapus folder core yang ada (kita akan tambah lagi sebagai submodule)
-rm -rf core
-
-# Tambahkan repo private sebagai submodule
 git submodule add git@github.com:your-username/my-awesome-app-private.git core
-
-# Initialize dan update submodule
 git submodule update --init --recursive
+```
+
+### 4. Initialize konten di dalam submodule
+
+```bash
+cd core
+
+# Buat kode production kamu di sini
+echo "# My Awesome App - Production" > README.md
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git push -u origin main
+
+cd ..
 ```
 
 ### 5. Copy script sync
